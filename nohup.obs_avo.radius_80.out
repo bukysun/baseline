@@ -1,0 +1,16 @@
+Logging to /tmp/openai-2018-11-07-13-54-05-272834
+Logging to /tmp/openai-2018-11-07-13-54-05-341193
+2018-11-07 13:54:12.207320: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+env_type: obs_avo_env
+pygame 1.9.4
+Hello from the pygame community. https://www.pygame.org/contribute.html
+Loading chipmunk for Linux (64bit) [/home/wuhui-lab/anaconda2/envs/baseline/lib/python3.5/site-packages/pymunk/libchipmunk64.so]
+Training deepq on obs_avo_env:ObsAvoidance-v1 with arguments 
+{'network': 'mlp'}
+---------------------------------------
+| % time spent exploring  | 2         |
+| episodes                | 100       |
+| mean 100 episode reward | -4.68e+04 |
+| steps                   | 435061    |
+---------------------------------------
+Saving model due to mean reward increase: None -> -46692.3

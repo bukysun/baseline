@@ -2,6 +2,7 @@ import sys
 import multiprocessing
 import os.path as osp
 import gym
+from gym.envs.registration import register
 from collections import defaultdict
 import tensorflow as tf
 import numpy as np
@@ -29,6 +30,10 @@ try:
     import roboschool
 except ImportError:
     roboschool = None
+
+
+register(id="ObsAvoidance-v1", entry_point="env.obs_avo_env:ObsAvoEnv")
+
 
 _game_envs = defaultdict(set)
 for env in gym.envs.registry.all():
@@ -93,7 +98,7 @@ def build_env(args):
 
     env_type, env_id = get_env_type(args.env)
 
-    if env_type in {'atari', 'retro'}:
+    if env_type in {'atari', 'retro', 'obs_avo_env'}:
         if alg == 'deepq':
             env = make_env(env_id, env_type, seed=seed, wrapper_kwargs={'frame_stack': True})
         elif alg == 'trpo_mpi':
@@ -205,14 +210,16 @@ def main():
     if args.play:
         logger.log("Running trained model")
         env = build_env(args)
+        env.unwrapped.show_sensors = True
+        env.unwrapped.draw_screen = True
         obs = env.reset()
         def initialize_placeholders(nlstm=128,**kwargs):
             return np.zeros((args.num_env or 1, 2*nlstm)), np.zeros((1))
         state, dones = initialize_placeholders(**extra_args)
         while True:
             actions, _, state, _ = model.step(obs,S=state, M=dones)
-            obs, _, done, _ = env.step(actions)
-            env.render()
+            obs, _, done, _ = env.step(actions[0])
+            #env.render()
             done = done.any() if isinstance(done, np.ndarray) else done
 
             if done:
